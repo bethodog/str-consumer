@@ -12,7 +12,9 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @Configuration
 @RequiredArgsConstructor
 public class StringConsumerConfig {
@@ -36,5 +38,34 @@ public class StringConsumerConfig {
 		factory.setConsumerFactory(consumerFactory);
 		return factory;
 	}
+	
+	/**
+	 * 
+	 * @param consumerFactory
+	 * @return nao funciona corretamente na versao 3 do spring
+	 */
+	@Bean
+	@Deprecated(forRemoval = true)
+	public ConcurrentKafkaListenerContainerFactory<String, String> validMessageContainererFactory(
+			ConsumerFactory<String, String> consumerFactory
+	) {
+		var factory = new ConcurrentKafkaListenerContainerFactory<String, String>();
+		factory.setConsumerFactory(consumerFactory);
+//		factory.setRecordInterceptor(validMessage());
+		return factory;
+	}
+
+
+//	private RecordInterceptor<String, String> validMessage() {
+//		// TODO Auto-generated method stub
+//		return record -> {
+//			if(record.value().contains("Teste")) {
+//				log.info("Possui a palavra Teste");
+//				return record; 
+//			}
+//			log.warn("NAO possui a palavra Teste");
+//			return record;
+//		};
+//	}
 	
 }
